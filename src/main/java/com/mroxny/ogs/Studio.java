@@ -1,8 +1,6 @@
 package com.mroxny.ogs;
 
-import java.util.List;
-
-public class Studios {
+public class Studio {
     private int id;
     private String name;
     private String country;

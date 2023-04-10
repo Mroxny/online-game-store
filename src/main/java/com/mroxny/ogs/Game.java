@@ -14,6 +14,6 @@ public class Game {
     private List<String> photos;
     private List<String> genres;
     private List<String> tags;
-    
+
 
 }
