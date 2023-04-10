@@ -1,6 +1,6 @@
 package com.mroxny.ogs;
 
-public class Requirement {
+public class Requirements {
     private int id;
     private String system;
     private String processor;
