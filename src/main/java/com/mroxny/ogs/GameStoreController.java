@@ -37,7 +37,7 @@ public class GameStoreController {
     }
 
     @GetMapping("/findGame")
-    public ResponseEntity<List<Game>> getAllGames(@RequestParam String query){
+    public ResponseEntity<List<Game>> findGames(@RequestParam String query){
         List<Game> games = dbManager.getAllGames();
         return ResponseEntity.ok(games);
     }
