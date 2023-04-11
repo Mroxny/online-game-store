@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -139,14 +140,23 @@ public class StoreCSVService implements StoreDBInterface{
         return ++min;
     }
 
-    @Override
-    public List<Game> getAllGames() {
-        List<String> lines = readCSV(FILE_GAMES);
+    private List<Game> convertStringsToGames(List<String> lines, String order){
         List<Game> games = new ArrayList<>();
         for(String s : lines){
             games.add(makeGameFromCSV(s));
         }
+
+        GameComparator gc = new GameComparator(order);
+        games.sort(gc);
+
         return games;
+    }
+
+
+    @Override
+    public List<Game> getAllGames(String order) {
+        List<String> lines = readCSV(FILE_GAMES);
+        return convertStringsToGames(lines, order);
     }
 
     @Override
@@ -156,14 +166,10 @@ public class StoreCSVService implements StoreDBInterface{
     }
 
     @Override
-    public List<Game> getGamesByGenre(String genre) {
+    public List<Game> getGamesByGenre(String genre,String order) {
         String genreId = getLineByValue(FILE_GENRES, 1, genre).split(",")[0];
         List<String> gameStrings = getManyToMany(FILE_GAMES_GENRES, FILE_GAMES, Integer.parseInt(genreId), 1,0);
-        List<Game> games = new ArrayList<>();
-        for(String s : gameStrings){
-            games.add(makeGameFromCSV(s));
-        }
 
-        return games;
+        return convertStringsToGames(gameStrings, order);
     }
 }

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -19,26 +20,32 @@ public class GameStoreController {
     }
 
     @GetMapping("/games")
-    public ResponseEntity<List<Game>> getAllGames(){
-        List<Game> games = dbManager.getAllGames();
+    public ResponseEntity<List<Game>> getAllGames(@RequestParam(required = false) String order){
+        if(order == null){
+            order = "name";
+        }
+        List<Game> games = dbManager.getAllGames(order);
         return ResponseEntity.ok(games);
     }
 
-    @GetMapping("/games/{id}")
+    @GetMapping("/game/{id}")
     public ResponseEntity<Game> getGameById(@PathVariable int id){
         Game game = dbManager.getGameById(id);
         return ResponseEntity.ok(game);
     }
 
     @GetMapping("/games/{genre}")
-    public ResponseEntity<List<Game>> getGamesByGenre(@PathVariable String genre){
-        List<Game> games = dbManager.getGamesByGenre(genre);
+    public ResponseEntity<List<Game>> getGamesByGenre(@PathVariable String genre, @RequestParam(required = false) String order){
+        if(order == null){
+            order = "name";
+        }
+        List<Game> games = dbManager.getGamesByGenre(genre, order);
         return ResponseEntity.ok(games);
     }
 
     @GetMapping("/findGame")
     public ResponseEntity<List<Game>> findGames(@RequestParam String query){
-        List<Game> games = dbManager.getAllGames();
+        List<Game> games = new ArrayList<>();
         return ResponseEntity.ok(games);
     }
 
