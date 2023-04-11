@@ -54,7 +54,7 @@ public class StoreCSVService implements StoreDBInterface{
         game.setPremiere(values[5]);
         game.setPrice(Float.parseFloat(values[6]));
         game.setTrailers(getOneToMany(FILE_GAMES, game.getId()));
-        game.setTrailers(getOneToMany(FILE_IMAGES, game.getId()));
+        game.setPhotos(getOneToMany(FILE_IMAGES, game.getId()));
 
         return game;
     }
@@ -71,6 +71,10 @@ public class StoreCSVService implements StoreDBInterface{
             }
         }
         return res;
+    }
+
+    private <T> getObjectById(String path, int id){
+        
     }
 
     private int getNewId(){
