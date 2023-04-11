@@ -14,6 +14,7 @@ public class StoreCSVService implements StoreDBInterface{
     private static String FILE_TRAILERS="./csvDB/trailers.csv";
     private static String FILE_IMAGES="./csvDB/images.csv";
     private static String FILE_STUDIOS="./csvDB/studios.csv";
+    private static String FILE_REQUIREMENTS="./csvDB/requirements.csv";
 
 
     private List<String> lines;
@@ -55,6 +56,8 @@ public class StoreCSVService implements StoreDBInterface{
         game.setPrice(Float.parseFloat(values[6]));
         game.setTrailers(getOneToMany(FILE_GAMES, game.getId()));
         game.setPhotos(getOneToMany(FILE_IMAGES, game.getId()));
+        game.setStudio(Studio.getFromCSV(getObjectLineById(FILE_STUDIOS, Integer.parseInt(values[7]))));
+        game.setRequirements(Requirements.getFromCSV(getObjectLineById(FILE_REQUIREMENTS, Integer.parseInt(values[8]))));
 
         return game;
     }
@@ -73,8 +76,15 @@ public class StoreCSVService implements StoreDBInterface{
         return res;
     }
 
-    private <T> getObjectById(String path, int id){
-        
+    private String getObjectLineById(String path, int id){
+        List<String> lines = readCSV(path);
+        for(String s : lines){
+            String[] vals = s.split(",");
+            if(Integer.parseInt(vals[0]) == id){
+                return s;
+            }
+        }
+        return "";
     }
 
     private int getNewId(){
