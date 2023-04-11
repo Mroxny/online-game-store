@@ -5,6 +5,6 @@ import java.util.List;
 public interface StoreDBInterface {
     public List<Game> getAllGames();
 
-    public List<Game> getGameById(int id);
+    public Game getGameById(int id);
 
 }
