@@ -54,7 +54,7 @@ public class GameStoreController {
         return ResponseEntity.ok(g);
     }
 
-    @PutMapping("/deleteGame/{id}")
+    @DeleteMapping("/deleteGame/{id}")
     public ResponseEntity<Game> deleteGame(@PathVariable int id){
         Game g = new Game();
         return ResponseEntity.ok(g);
