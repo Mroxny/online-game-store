@@ -1,9 +1,12 @@
 package com.mroxny.ogs;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -170,30 +173,45 @@ public class StoreCSVService implements StoreDBInterface{
 
 
     @Override
-    public List<Game> getAllGames(String order) {
+    public ResponseDTO getAllGames(String order) {
         List<String> lines = readCSV(FILE_GAMES);
-        return makeGamesFromCSV(lines, order);
+        List<Game> games = makeGamesFromCSV(lines, order);
+
+
+        return new ResponseDTO(HttpStatus.OK,"OK", games);
     }
 
     @Override
-    public Game getGameById(int id) {
-        String line = getLinesByColumn(FILE_GAMES, 0, id+"").get(0);
-        return makeGameFromCSV(line);
+    public ResponseDTO getGameById(int id) {
+        List<String> lines = getLinesByColumn(FILE_GAMES, 0, id+"");
+
+        if(lines.size() < 1) return new ResponseDTO(HttpStatus.BAD_REQUEST, "No game with that id", null);
+
+        Game g = makeGameFromCSV(lines.get(0));
+        return new ResponseDTO(HttpStatus.OK, "OK", Collections.singletonList(g));
     }
 
     //TODO: Make better search engine
     @Override
-    public List<Game> getGamesByName(String name, String order){
+    public ResponseDTO getGamesByName(String name, String order){
 
         List<String> lines = getLinesByColumn(FILE_GAMES, 1, name);
-        return makeGamesFromCSV(lines, order);
+        if(lines.size() < 1) return new ResponseDTO(HttpStatus.NO_CONTENT, "There's no games with that name", null);
+
+        List<Game> g = makeGamesFromCSV(lines, order);
+        return new ResponseDTO(HttpStatus.OK, "OK", g);
     }
 
     @Override
-    public List<Game> getGamesByGenre(String genre,String order) {
-        String genreId = getLinesByColumn(FILE_GENRES, 1, genre).get(0).split(",")[0];
-        List<String> gameStrings = getManyToMany(FILE_GAMES_GENRES, FILE_GAMES, Integer.parseInt(genreId), 1,0);
+    public ResponseDTO getGamesByGenre(String genre,String order) {
+        List<String> targets = getLinesByColumn(FILE_GENRES, 1, genre);
+        if(targets.size() < 1) return new ResponseDTO(HttpStatus.NOT_FOUND, "Cant find genre "+genre, null);
 
-        return makeGamesFromCSV(gameStrings, order);
+        int genreId = Integer.parseInt(targets.get(0).split(",")[0]);
+        List<String> gameStrings = getManyToMany(FILE_GAMES_GENRES, FILE_GAMES, genreId, 1,0);
+        if(gameStrings.size() < 1) return new ResponseDTO(HttpStatus.NO_CONTENT, "No games with genre "+genre, null);
+
+        List<Game> g = makeGamesFromCSV(gameStrings, order);
+        return new ResponseDTO(HttpStatus.OK, "OK", g);
     }
 }
