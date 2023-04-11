@@ -31,7 +31,7 @@ public class Studio {
         this.country = country;
     }
 
-    public static Studio getStudioFromCSV(String line){
+    public static Studio getFromCSV(String line){
         String[] vals = line.split(",");
         Studio studio = new Studio();
 

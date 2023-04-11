@@ -56,7 +56,7 @@ public class Requirements {
         this.storage = storage;
     }
 
-    public static Requirements getRequirementsFromCSV(String line){
+    public static Requirements getFromCSV(String line){
         String[] vals = line.split(",");
         Requirements requirements = new Requirements();
 
