@@ -19,7 +19,7 @@ public class StoreCSVService implements StoreDBInterface{
     private void editCSV(){
 
     }
-    
+
     @Override
     public List<Game> getAllGames() {
         List<Game> games = new ArrayList<>();
