@@ -133,8 +133,12 @@ public class StoreCSVService implements StoreDBInterface{
         for(String s : lines){
             games.add(makeGameFromCSV(s));
         }
-
-
         return games;
+    }
+
+    @Override
+    public Game getGameById(int id) {
+        String line = getObjectLineById(FILE_GAMES, id);
+        return makeGameFromCSV(line);
     }
 }
