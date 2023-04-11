@@ -1,5 +1,7 @@
 package com.mroxny.ogs;
 
+import java.util.List;
+
 public class Studio {
     private int id;
     private String name;
@@ -27,5 +29,16 @@ public class Studio {
 
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    public static Studio getStudioFromCSV(String line){
+        String[] vals = line.split(",");
+        Studio studio = new Studio();
+
+        studio.setId(Integer.parseInt(vals[0]));
+        studio.setName(vals[1]);
+        studio.setCountry(vals[2]);
+
+        return studio;
     }
 }
