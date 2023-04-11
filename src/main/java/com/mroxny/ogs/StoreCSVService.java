@@ -7,6 +7,19 @@ import java.util.List;
 
 @Service
 public class StoreCSVService implements StoreDBInterface{
+
+    private List<String> readCSV(){
+        return new ArrayList<>();
+    }
+
+    private void appendToCSV(){
+
+    }
+
+    private void editCSV(){
+
+    }
+    
     @Override
     public List<Game> getAllGames() {
         List<Game> games = new ArrayList<>();
@@ -14,7 +27,5 @@ public class StoreCSVService implements StoreDBInterface{
         games.add(new Game());
 
         return games;
-
-
     }
 }
