@@ -11,4 +11,10 @@ public interface StoreDBInterface {
 
     public ResponseDTO getGamesByGenre(String genre,String order);
 
+    public ResponseDTO insertGame(GameDTO game);
+
+    public ResponseDTO updateGame(int id, GameDTO game);
+
+    public ResponseDTO deleteGame(int id);
+
 }

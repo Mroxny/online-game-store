@@ -67,19 +67,28 @@ public class GameStoreController {
 
     @PostMapping("/insertGame")
     public ResponseEntity<Object> insertGame(@RequestParam GameDTO game){
-        Game g = new Game();
-        return ResponseEntity.ok(g);
+        ResponseDTO response = dbManager.insertGame(game);
+        if (response.getCode() != HttpStatus.OK) {
+            return new ResponseEntity<>(response.getMessage(), response.getCode());
+        }
+        return ResponseEntity.ok(response.getContent());
     }
 
     @PutMapping("/updateGame/{id}")
     public ResponseEntity<Object> updateGame(@PathVariable int id, @RequestParam GameDTO game){
-        Game g = new Game();
-        return ResponseEntity.ok(g);
+        ResponseDTO response = dbManager.updateGame(id,game);
+        if (response.getCode() != HttpStatus.OK) {
+            return new ResponseEntity<>(response.getMessage(), response.getCode());
+        }
+        return ResponseEntity.ok(response.getContent());
     }
 
     @DeleteMapping("/deleteGame/{id}")
     public ResponseEntity<Object> deleteGame(@PathVariable int id){
-        Game g = new Game();
-        return ResponseEntity.ok(g);
+        ResponseDTO response = dbManager.deleteGame(id);
+        if (response.getCode() != HttpStatus.OK) {
+            return new ResponseEntity<>(response.getMessage(), response.getCode());
+        }
+        return ResponseEntity.ok(response.getContent());
     }
 }

@@ -214,4 +214,20 @@ public class StoreCSVService implements StoreDBInterface{
         List<Game> g = makeGamesFromCSV(gameStrings, order);
         return new ResponseDTO(HttpStatus.OK, "OK", g);
     }
+
+    @Override
+    public ResponseDTO insertGame(GameDTO game) {
+        return null;
+    }
+
+    @Override
+    public ResponseDTO updateGame(int id, GameDTO game) {
+        return null;
+    }
+
+    @Override
+    public ResponseDTO deleteGame(int id) {
+        return null;
+    }
+
 }
