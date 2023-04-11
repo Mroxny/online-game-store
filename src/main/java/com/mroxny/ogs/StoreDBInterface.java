@@ -7,4 +7,6 @@ public interface StoreDBInterface {
 
     public Game getGameById(int id);
 
+    public List<Game> getGamesByGenre(String genre);
+
 }

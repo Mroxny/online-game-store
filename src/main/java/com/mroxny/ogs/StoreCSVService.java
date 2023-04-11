@@ -59,30 +59,34 @@ public class StoreCSVService implements StoreDBInterface{
         game.setBigDesc(values[4]);
         game.setPremiere(values[5]);
         game.setPrice(Float.parseFloat(values[6]));
-        game.setTrailers(getOneToMany(FILE_TRAILERS, game.getId()));
-        game.setPhotos(getOneToMany(FILE_IMAGES, game.getId()));
-        game.setStudio(Studio.getFromCSV(getObjectLineById(FILE_STUDIOS, Integer.parseInt(values[7]))));
-        game.setRequirements(Requirements.getFromCSV(getObjectLineById(FILE_REQUIREMENTS, Integer.parseInt(values[8]))));
-        game.setGenres(getManyToMany(FILE_GAMES_GENRES,FILE_GENRES, game.getId()));
-        game.setTags(getManyToMany(FILE_GAMES_TAGS,FILE_TAGS, game.getId()));
+
+        game.setTrailers(getValuesFromLines(getOneToMany(FILE_TRAILERS, game.getId()), 1));
+        game.setPhotos(getValuesFromLines(getOneToMany(FILE_IMAGES, game.getId()), 1));
+
+        game.setStudio(Studio.getFromCSV(getLineByValue(FILE_STUDIOS, 0, values[7])));
+        game.setRequirements(Requirements.getFromCSV(getLineByValue(FILE_REQUIREMENTS, 0, values[8])));
+
+        game.setGenres(getValuesFromLines( getManyToMany(FILE_GAMES_GENRES,FILE_GENRES, game.getId(),0,1),1));
+        game.setTags(getValuesFromLines( getManyToMany(FILE_GAMES_TAGS,FILE_TAGS, game.getId(),0,1),1));
+
 
         return game;
     }
 
-    private List<String> getManyToMany(String path1, String path2, int id){
+    private List<String> getManyToMany(String path1, String path2, int id, int searchIndex, int targetIndex){
         List<String> lines1 = readCSV(path1);
         List<String> lines2 = readCSV(path2);
         List<String> res = new ArrayList<>();
 
         for(String s1 : lines1){
             String[] vals1 = s1.split(",");
-            int idFromFile1 = Integer.parseInt(vals1[0]);
+            int idFromFile1 = Integer.parseInt(vals1[searchIndex]);
             if(idFromFile1 == id){
-                int target = Integer.parseInt(vals1[1]);
+                int target = Integer.parseInt(vals1[targetIndex]);
                 for(String s2 : lines2){
                     String[] vals2 = s2.split(",");
                     int idFromFile2 = Integer.parseInt(vals2[0]);
-                    if(idFromFile2 == target)res.add(vals2[1]);
+                    if(idFromFile2 == target)res.add(s2);
 
                 }
             }
@@ -98,21 +102,30 @@ public class StoreCSVService implements StoreDBInterface{
             String[] vals = s.split(",");
             int idFromFile = Integer.parseInt(vals[vals.length-1]);
             if(idFromFile == id){
-                res.add(vals[1]);
+                res.add(s);
             }
         }
         return res;
     }
 
-    private String getObjectLineById(String path, int id){
+    private String getLineByValue(String path, int index,String value){
         List<String> lines = readCSV(path);
         for(String s : lines){
             String[] vals = s.split(",");
-            if(Integer.parseInt(vals[0]) == id){
+            if(vals[index].equals(value)){
                 return s;
             }
         }
         return "";
+    }
+
+    private List<String> getValuesFromLines(List<String> list, int index){
+        List<String> res = new ArrayList<>();
+        for(String s:list){
+            String[] vals = s.split(",");
+            res.add(vals[index]);
+        }
+        return res;
     }
 
     private int getNewId(){
@@ -138,7 +151,19 @@ public class StoreCSVService implements StoreDBInterface{
 
     @Override
     public Game getGameById(int id) {
-        String line = getObjectLineById(FILE_GAMES, id);
+        String line = getLineByValue(FILE_GAMES, 0, id+"");
         return makeGameFromCSV(line);
+    }
+
+    @Override
+    public List<Game> getGamesByGenre(String genre) {
+        String genreId = getLineByValue(FILE_GENRES, 1, genre).split(",")[0];
+        List<String> gameStrings = getManyToMany(FILE_GAMES_GENRES, FILE_GAMES, Integer.parseInt(genreId), 1,0);
+        List<Game> games = new ArrayList<>();
+        for(String s : gameStrings){
+            games.add(makeGameFromCSV(s));
+        }
+
+        return games;
     }
 }

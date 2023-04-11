@@ -26,13 +26,13 @@ public class GameStoreController {
 
     @GetMapping("/games/{id}")
     public ResponseEntity<Game> getGameById(@PathVariable int id){
-        Game games = new Game();
-        return ResponseEntity.ok(games);
+        Game game = dbManager.getGameById(id);
+        return ResponseEntity.ok(game);
     }
 
     @GetMapping("/games/{genre}")
-    public ResponseEntity<Game> getGameByGenre(@PathVariable String genre){
-        Game games = new Game();
+    public ResponseEntity<List<Game>> getGamesByGenre(@PathVariable String genre){
+        List<Game> games = dbManager.getGamesByGenre(genre);
         return ResponseEntity.ok(games);
     }
 
