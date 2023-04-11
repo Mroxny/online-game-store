@@ -55,4 +55,18 @@ public class Requirements {
     public void setStorage(String storage) {
         this.storage = storage;
     }
+
+    public static Requirements getRequirementsFromCSV(String line){
+        String[] vals = line.split(",");
+        Requirements requirements = new Requirements();
+
+        requirements.setId(Integer.parseInt(vals[0]));
+        requirements.setSystem(vals[1]);
+        requirements.setProcessor(vals[2]);
+        requirements.setMemory(vals[3]);
+        requirements.setGraphics(vals[4]);
+        requirements.setStorage(vals[5]);
+
+        return requirements;
+    }
 }
