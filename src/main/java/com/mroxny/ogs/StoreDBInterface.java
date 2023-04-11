@@ -7,6 +7,8 @@ public interface StoreDBInterface {
 
     public Game getGameById(int id);
 
+    public List<Game> getGamesByName(String name, String order);
+
     public List<Game> getGamesByGenre(String genre,String order);
 
 }

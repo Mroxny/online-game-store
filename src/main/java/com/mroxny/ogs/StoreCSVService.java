@@ -71,6 +71,18 @@ public class StoreCSVService implements StoreDBInterface{
         return game;
     }
 
+    private List<Game> makeGamesFromCSV(List<String> lines, String order){
+        List<Game> games = new ArrayList<>();
+        for(String s : lines){
+            games.add(makeGameFromCSV(s));
+        }
+
+        GameComparator gc = new GameComparator(order);
+        games.sort(gc);
+
+        return games;
+    }
+
     private List<String> getManyToMany(String path1, String path2, int id, int searchIndex, int targetIndex){
         List<String> lines1 = readCSV(path1);
         List<String> lines2 = readCSV(path2);
@@ -111,7 +123,7 @@ public class StoreCSVService implements StoreDBInterface{
         List<String> res = new ArrayList<>();
         for(String s : lines){
             String[] vals = s.split(",");
-            if(vals[index].equals(value)){
+            if(vals[index].equalsIgnoreCase(value)){
                 res.add(s);
             }
         }
@@ -139,23 +151,13 @@ public class StoreCSVService implements StoreDBInterface{
         return 0;
     }
 
-    private List<Game> convertStringsToGames(List<String> lines, String order){
-        List<Game> games = new ArrayList<>();
-        for(String s : lines){
-            games.add(makeGameFromCSV(s));
-        }
 
-        GameComparator gc = new GameComparator(order);
-        games.sort(gc);
-
-        return games;
-    }
 
 
     @Override
     public List<Game> getAllGames(String order) {
         List<String> lines = readCSV(FILE_GAMES);
-        return convertStringsToGames(lines, order);
+        return makeGamesFromCSV(lines, order);
     }
 
     @Override
@@ -164,11 +166,19 @@ public class StoreCSVService implements StoreDBInterface{
         return makeGameFromCSV(line);
     }
 
+    //TODO: Make better search engine
+    @Override
+    public List<Game> getGamesByName(String name, String order){
+
+        List<String> lines = getLinesByValue(FILE_GAMES, 1, name);
+        return makeGamesFromCSV(lines, order);
+    }
+
     @Override
     public List<Game> getGamesByGenre(String genre,String order) {
         String genreId = getLinesByValue(FILE_GENRES, 1, genre).get(0).split(",")[0];
         List<String> gameStrings = getManyToMany(FILE_GAMES_GENRES, FILE_GAMES, Integer.parseInt(genreId), 1,0);
 
-        return convertStringsToGames(gameStrings, order);
+        return makeGamesFromCSV(gameStrings, order);
     }
 }

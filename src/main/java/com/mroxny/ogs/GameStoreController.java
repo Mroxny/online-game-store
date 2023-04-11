@@ -44,8 +44,11 @@ public class GameStoreController {
     }
 
     @GetMapping("/findGame")
-    public ResponseEntity<List<Game>> findGames(@RequestParam String query){
-        List<Game> games = new ArrayList<>();
+    public ResponseEntity<List<Game>> findGames(@RequestParam String query, @RequestParam(required = false) String order){
+        if(order == null){
+            order = "name";
+        }
+        List<Game> games = dbManager.getGamesByName(query, order);
         return ResponseEntity.ok(games);
     }
 
