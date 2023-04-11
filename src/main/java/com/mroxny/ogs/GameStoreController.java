@@ -41,4 +41,22 @@ public class GameStoreController {
         List<Game> games = dbManager.getAllGames();
         return ResponseEntity.ok(games);
     }
+
+    @PostMapping("/insertGame")
+    public ResponseEntity<Game> insertGame(@RequestParam GameDTO game){
+        Game g = new Game();
+        return ResponseEntity.ok(g);
+    }
+
+    @PutMapping("/updateGame/{id}")
+    public ResponseEntity<Game> updateGame(@PathVariable int id, @RequestParam GameDTO game){
+        Game g = new Game();
+        return ResponseEntity.ok(g);
+    }
+
+    @PutMapping("/deleteGame/{id}")
+    public ResponseEntity<Game> deleteGame(@PathVariable int id){
+        Game g = new Game();
+        return ResponseEntity.ok(g);
+    }
 }
