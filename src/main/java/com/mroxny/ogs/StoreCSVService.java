@@ -8,15 +8,15 @@ import java.util.List;
 @Service
 public class StoreCSVService implements StoreDBInterface{
 
-    private List<String> readCSV(){
+    private List<String> readCSV(String path){
         return new ArrayList<>();
     }
 
-    private void appendToCSV(){
+    private void appendToCSV(String path){
 
     }
 
-    private void editCSV(){
+    private void editCSV(String path){
 
     }
 
