@@ -5,25 +5,22 @@ import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @Service
 public class StoreCSVService implements StoreDBInterface{
-    private static String FILE_GAMES="./csvDB/games.csv";
-    private static String FILE_TRAILERS="./csvDB/trailers.csv";
-    private static String FILE_IMAGES="./csvDB/images.csv";
-    private static String FILE_STUDIOS="./csvDB/studios.csv";
-    private static String FILE_REQUIREMENTS="./csvDB/requirements.csv";
-    private static String FILE_GENRES="./csvDB/genres.csv";
-    private static String FILE_TAGS="./csvDB/tags.csv";
-    private static String FILE_GAMES_GENRES="./csvDB/games_genres.csv";
-    private static String FILE_GAMES_TAGS="./csvDB/games_tags.csv";
+    private static final String FILE_GAMES="./csvDB/games.csv";
+    private static final String FILE_TRAILERS="./csvDB/trailers.csv";
+    private static final String FILE_IMAGES="./csvDB/images.csv";
+    private static final String FILE_STUDIOS="./csvDB/studios.csv";
+    private static final String FILE_REQUIREMENTS="./csvDB/requirements.csv";
+    private static final String FILE_GENRES="./csvDB/genres.csv";
+    private static final String FILE_TAGS="./csvDB/tags.csv";
+    private static final String FILE_GAMES_GENRES="./csvDB/games_genres.csv";
+    private static final String FILE_GAMES_TAGS="./csvDB/games_tags.csv";
 
 
 
-    private List<String> lines;
 
     private List<String> readCSV(String path){
         List<String> values = new ArrayList<>();
@@ -64,11 +61,11 @@ public class StoreCSVService implements StoreDBInterface{
         game.setTrailers(getValuesFromLines(getOneToMany(FILE_TRAILERS, game.getId()), 1));
         game.setPhotos(getValuesFromLines(getOneToMany(FILE_IMAGES, game.getId()), 1));
 
-        game.setStudio(Studio.getFromCSV(getLineByValue(FILE_STUDIOS, 0, values[7])));
-        game.setRequirements(Requirements.getFromCSV(getLineByValue(FILE_REQUIREMENTS, 0, values[8])));
+        game.setStudio(Studio.getFromCSV(getLinesByValue(FILE_STUDIOS, 0, values[7]).get(0)));
+        game.setRequirements(Requirements.getFromCSV(getLinesByValue(FILE_REQUIREMENTS, 0, values[8]).get(0)));
 
-        game.setGenres(getValuesFromLines( getManyToMany(FILE_GAMES_GENRES,FILE_GENRES, game.getId(),0,1),1));
-        game.setTags(getValuesFromLines( getManyToMany(FILE_GAMES_TAGS,FILE_TAGS, game.getId(),0,1),1));
+        game.setGenres(getValuesFromLines(getManyToMany(FILE_GAMES_GENRES,FILE_GENRES, game.getId(),0,1),1));
+        game.setTags(getValuesFromLines(getManyToMany(FILE_GAMES_TAGS,FILE_TAGS, game.getId(),0,1),1));
 
 
         return game;
@@ -109,15 +106,16 @@ public class StoreCSVService implements StoreDBInterface{
         return res;
     }
 
-    private String getLineByValue(String path, int index,String value){
+    private List<String> getLinesByValue(String path, int index,String value){
         List<String> lines = readCSV(path);
+        List<String> res = new ArrayList<>();
         for(String s : lines){
             String[] vals = s.split(",");
             if(vals[index].equals(value)){
-                return s;
+                res.add(s);
             }
         }
-        return "";
+        return res;
     }
 
     private List<String> getValuesFromLines(List<String> list, int index){
@@ -131,13 +129,14 @@ public class StoreCSVService implements StoreDBInterface{
 
     private int getNewId(){
         //I'm so sorry about this :,)
-        int min = 0;
+        /*int min = 0;
         for(String s : lines){
             String[] vals = s.split(",");
             int id = Integer.parseInt(vals[0]);
             if(id > min) min = id;
         }
-        return ++min;
+        return ++min;*/
+        return 0;
     }
 
     private List<Game> convertStringsToGames(List<String> lines, String order){
@@ -161,13 +160,13 @@ public class StoreCSVService implements StoreDBInterface{
 
     @Override
     public Game getGameById(int id) {
-        String line = getLineByValue(FILE_GAMES, 0, id+"");
+        String line = getLinesByValue(FILE_GAMES, 0, id+"").get(0);
         return makeGameFromCSV(line);
     }
 
     @Override
     public List<Game> getGamesByGenre(String genre,String order) {
-        String genreId = getLineByValue(FILE_GENRES, 1, genre).split(",")[0];
+        String genreId = getLinesByValue(FILE_GENRES, 1, genre).get(0).split(",")[0];
         List<String> gameStrings = getManyToMany(FILE_GAMES_GENRES, FILE_GAMES, Integer.parseInt(genreId), 1,0);
 
         return convertStringsToGames(gameStrings, order);
