@@ -39,10 +39,15 @@ public class Studio {
     public static Studio getFromCSV(String line){
         String[] vals = line.split(",");
         Studio studio = new Studio();
+        try{
+            studio.setId(Integer.parseInt(vals[0]));
+            studio.setName(vals[1]);
+            studio.setCountry(vals[2]);
+        }
+        catch (IndexOutOfBoundsException ex) {
+            ex.printStackTrace();
+        }
 
-        studio.setId(Integer.parseInt(vals[0]));
-        studio.setName(vals[1]);
-        studio.setCountry(vals[2]);
 
         return studio;
     }
