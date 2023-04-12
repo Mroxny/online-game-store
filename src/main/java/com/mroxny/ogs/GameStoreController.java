@@ -74,7 +74,7 @@ public class GameStoreController {
         if (response.getCode() != HttpStatus.OK) {
             return new ResponseEntity<>(response.getMessage(), response.getCode());
         }
-        return ResponseEntity.ok(response.getContent());
+        return ResponseEntity.ok(response.getMessage());
     }
 
     @PostMapping("/insertStudio")
@@ -83,7 +83,7 @@ public class GameStoreController {
         if (response.getCode() != HttpStatus.OK) {
             return new ResponseEntity<>(response.getMessage(), response.getCode());
         }
-        return ResponseEntity.ok(response.getContent());
+        return ResponseEntity.ok(response.getMessage());
     }
 
     @PostMapping("/insertRequirements")
@@ -92,7 +92,7 @@ public class GameStoreController {
         if (response.getCode() != HttpStatus.OK) {
             return new ResponseEntity<>(response.getMessage(), response.getCode());
         }
-        return ResponseEntity.ok(response.getContent());
+        return ResponseEntity.ok(response.getMessage());
     }
 
     @PutMapping("/updateGame/{id}")
@@ -101,7 +101,7 @@ public class GameStoreController {
         if (response.getCode() != HttpStatus.OK) {
             return new ResponseEntity<>(response.getMessage(), response.getCode());
         }
-        return ResponseEntity.ok(response.getContent());
+        return ResponseEntity.ok(response.getMessage());
     }
 
     @DeleteMapping("/deleteGame/{id}")
@@ -110,6 +110,6 @@ public class GameStoreController {
         if (response.getCode() != HttpStatus.OK) {
             return new ResponseEntity<>(response.getMessage(), response.getCode());
         }
-        return ResponseEntity.ok(response.getContent());
+        return ResponseEntity.ok(response.getMessage());
     }
 }

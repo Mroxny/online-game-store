@@ -73,7 +73,7 @@ public class StoreCSVService implements StoreDBInterface{
         String gameLine = newGameId+","+game;
         writeInCSV(FILE_GAMES, gameLine, true);
 
-        return new ResponseDTO(HttpStatus.OK, "OK", null);
+        return new ResponseDTO(HttpStatus.OK, "Id: "+newGameId, null);
     }
 
     @Override
@@ -83,7 +83,7 @@ public class StoreCSVService implements StoreDBInterface{
         String studioLine = newStudioId+","+studio;
         writeInCSV(FILE_STUDIOS, studioLine, true);
 
-        return new ResponseDTO(HttpStatus.OK, "OK", null);
+        return new ResponseDTO(HttpStatus.OK, "Id: "+newStudioId, null);
     }
 
     @Override
