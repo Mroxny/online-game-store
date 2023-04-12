@@ -82,23 +82,26 @@ class OgsApplicationTests {
         gameDTO.setStudio(1);
         gameDTO.setRequirements(3);
 
-
-        ResponseDTO responseDTO = service.updateGame(5,gameDTO);
+        ResponseDTO responseDTO = service.updateGame(1,gameDTO);
         assertEquals(HttpStatus.OK, responseDTO.getCode());
 
-        List<String> lines = service.readCSV("./csvDB/games.csv");
-        assertTrue(lines.stream().anyMatch(l -> l.contains("GameNew")));
+        String gameName = service.getGameById(1).getContent().get(0).getName();
+
+        assertEquals("GameNew", gameName);
     }
 
     @Test
     public void testDeleteGame() {
         StoreCSVService service = new StoreCSVService();
 
-        ResponseDTO responseDTO = service.deleteGame(11);
+        int indexToDelete = 1;
+        String gameName = service.getGameById(indexToDelete).getContent().get(0).getName();
+
+        ResponseDTO responseDTO = service.deleteGame(indexToDelete);
         assertEquals(HttpStatus.OK, responseDTO.getCode());
 
         List<String> lines = service.readCSV("./csvDB/games.csv");
-        assertTrue(lines.stream().anyMatch(l -> !l.contains("GameNew")));
+        assertTrue(lines.stream().anyMatch(l -> !l.contains(gameName)));
     }
 
 
