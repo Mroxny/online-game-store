@@ -15,6 +15,8 @@ public interface StoreDBInterface {
 
     public ResponseDTO insertStudio(StudioDTO studio);
 
+    public ResponseDTO insertRequirements(RequirementsDTO requirements);
+
     public ResponseDTO updateGame(int id, GameDTO game);
 
     public ResponseDTO deleteGame(int id);

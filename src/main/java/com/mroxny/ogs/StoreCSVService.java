@@ -77,6 +77,27 @@ public class StoreCSVService implements StoreDBInterface{
     }
 
     @Override
+    public ResponseDTO insertStudio(StudioDTO studio) {
+        List<String> studios = readCSV(FILE_STUDIOS);
+        int newStudioId = getNewId(studios);
+        String studioLine = newStudioId+","+studio;
+        writeInCSV(FILE_STUDIOS, studioLine, true);
+
+        return new ResponseDTO(HttpStatus.OK, "OK", null);
+    }
+
+    @Override
+    public ResponseDTO insertRequirements(RequirementsDTO requirements) {
+        List<String> reqs = readCSV(FILE_STUDIOS);
+        int newReqsId = getNewId(reqs);
+        String reqsLine = newReqsId+","+requirements;
+        writeInCSV(FILE_STUDIOS, reqsLine, true);
+
+        return new ResponseDTO(HttpStatus.OK, "Id: "+newReqsId, null);
+    }
+
+
+    @Override
     public ResponseDTO updateGame(int id, GameDTO game) {
         List<String> lines = readCSV(FILE_GAMES);
         int index = getIndexByColumn(lines, 0, id+"");

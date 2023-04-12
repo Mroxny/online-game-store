@@ -77,6 +77,24 @@ public class GameStoreController {
         return ResponseEntity.ok(response.getContent());
     }
 
+    @PostMapping("/insertStudio")
+    public ResponseEntity<Object> insertStudio(@RequestParam StudioDTO studio){
+        ResponseDTO response = dbManager.insertStudio(studio);
+        if (response.getCode() != HttpStatus.OK) {
+            return new ResponseEntity<>(response.getMessage(), response.getCode());
+        }
+        return ResponseEntity.ok(response.getContent());
+    }
+
+    @PostMapping("/insertRequirements")
+    public ResponseEntity<Object> insertStudio(@RequestParam RequirementsDTO requirements){
+        ResponseDTO response = dbManager.insertRequirements(requirements);
+        if (response.getCode() != HttpStatus.OK) {
+            return new ResponseEntity<>(response.getMessage(), response.getCode());
+        }
+        return ResponseEntity.ok(response.getContent());
+    }
+
     @PutMapping("/updateGame/{id}")
     public ResponseEntity<Object> updateGame(@PathVariable int id, @RequestParam GameDTO game){
         ResponseDTO response = dbManager.updateGame(id,game);
