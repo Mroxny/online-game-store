@@ -1,5 +1,5 @@
 # online-game-store
-Small online store backend APi using Spring Boot
+Small online store backend API using Spring Boot
 
 Description
 ----
