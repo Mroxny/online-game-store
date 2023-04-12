@@ -133,6 +133,11 @@ public class StoreCSVService implements StoreDBInterface{
     }
 
 
+    /**
+     * Loads a CSV file and separates it into lines
+     * @param path path to the file
+     * @return a List of String with the loaded lines
+     */
     public List<String> readCSV(String path){
         List<String> values = new ArrayList<>();
         try {
@@ -149,6 +154,12 @@ public class StoreCSVService implements StoreDBInterface{
         return values;
     }
 
+    /**
+     * Depending on the option, it adds or overwrites a line to the CSV file
+     * @param path path to the file
+     * @param line String that will be added
+     * @param append specifies whether the line is to be added or to replace the content of the entire file
+     */
     private void writeInCSV(String path, String line, boolean append){
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(path, append));
@@ -160,6 +171,10 @@ public class StoreCSVService implements StoreDBInterface{
         }
     }
 
+    /**
+     * Creates a Game object from the given line
+     * @return a newly created Game object
+     */
     private Game makeGameFromCSV(String line){
         String[] values = line.split(",");
         Game game = new Game();
@@ -185,6 +200,12 @@ public class StoreCSVService implements StoreDBInterface{
         return game;
     }
 
+    /**
+     * Creates a list of the Game object and sorts it
+     * @param lines source needed for iteration
+     * @param order the value by which it sorts the list
+     * @return a sorted list of the Game object
+     */
     private List<Game> makeGamesFromCSV(List<String> lines, String order){
         List<Game> games = new ArrayList<>();
         for(String s : lines){
@@ -197,18 +218,25 @@ public class StoreCSVService implements StoreDBInterface{
         return games;
     }
 
-//    private String
-
-    private List<String> getManyToMany(String path1, String path2, int id, int searchIndex, int targetIndex){
+    /**
+     * Retrieves values from target table via associative table
+     * @param path1 path to the associative table
+     * @param path2 path to the target table
+     * @param id source id
+     * @param searchColumn alternate column of an associative table
+     * @param targetColumn search column of the target table
+     * @return a List of String with the found values from the target table
+     */
+    private List<String> getManyToMany(String path1, String path2, int id, int searchColumn, int targetColumn){
         List<String> lines1 = readCSV(path1);
         List<String> lines2 = readCSV(path2);
         List<String> res = new ArrayList<>();
 
         for(String s1 : lines1){
             String[] vals1 = s1.split(",");
-            int idFromFile1 = Integer.parseInt(vals1[searchIndex]);
+            int idFromFile1 = Integer.parseInt(vals1[searchColumn]);
             if(idFromFile1 == id){
-                int target = Integer.parseInt(vals1[targetIndex]);
+                int target = Integer.parseInt(vals1[targetColumn]);
                 for(String s2 : lines2){
                     String[] vals2 = s2.split(",");
                     int idFromFile2 = Integer.parseInt(vals2[0]);
@@ -220,6 +248,12 @@ public class StoreCSVService implements StoreDBInterface{
         return res;
     }
 
+    /**
+     * Retrieves table values from a one-to-many table
+     * @param path path to the target table
+     * @param id source id
+     * @return a List of String with the found values from the target table
+     */
     private List<String> getOneToMany(String path, int id){
         List<String> lines = readCSV(path);
         List<String> res = new ArrayList<>();
@@ -234,6 +268,13 @@ public class StoreCSVService implements StoreDBInterface{
         return res;
     }
 
+    /**
+     * Checks which lines match the given column with the given value from a table
+     * @param path path to the target table
+     * @param column column index starting at 0
+     * @param value check value
+     * @return a String List of lines that match a condition
+     */
     private List<String> getLinesByColumn(String path, int column,String value){
         List<String> lines = readCSV(path);
         List<String> res = new ArrayList<>();
@@ -249,6 +290,14 @@ public class StoreCSVService implements StoreDBInterface{
         List<String> lines = readCSV(path);
         return getLineByColumn(lines,column,value);
     }
+
+    /**
+     * Checks which line matches the given column with the given value from a table
+     * @param lines lines of the target table
+     * @param column column index starting at 0
+     * @param value check value
+     * @return a String line that match a condition
+     */
     private String getLineByColumn(List<String> lines, int column,String value){
         for(String s : lines){
             String[] vals = s.split(",");
@@ -258,6 +307,14 @@ public class StoreCSVService implements StoreDBInterface{
         }
         return null;
     }
+
+    /**
+     * Checks which line meets the given condition
+     * @param lines source lines
+     * @param column column index starting at 0
+     * @param value check value
+     * @return index number from the given list that satisfies the condition
+     */
     private int getIndexByColumn(List<String> lines, int column,String value){
         for(int i = 0; i<lines.size(); i++){
             String[] vals = lines.get(i).split(",");
@@ -268,6 +325,12 @@ public class StoreCSVService implements StoreDBInterface{
         return -1;
     }
 
+    /**
+     * Retrieves values from the specified column only
+     * @param list source lines
+     * @param column column index starting at 0
+     * @return a List of String that contains only the values in the given column
+     */
     private List<String> getValuesFromLines(List<String> list, int column){
         List<String> res = new ArrayList<>();
         for(String s:list){
@@ -277,6 +340,11 @@ public class StoreCSVService implements StoreDBInterface{
         return res;
     }
 
+    /**
+     * Searches for a new id from a given table
+     * @param lines source lines where first column is id
+     * @return a number with a new id
+     */
     private int getNewId(List<String> lines){
         int max = lines
                 .stream()
