@@ -26,6 +26,18 @@ As mentioned, the project comes with a sample database that contains CSV files. 
 
 ![](https://raw.githubusercontent.com/Mroxny/online-game-store/main/sqlDB/DB%20model.png "Example diagram")
 
+Assumptions
+----
+* The store's in a beautiful dimension where user data is not collected in any way
+* Functionality should not be tested on empty data
+* Games cannot be fully edited by admins (like genres, tags and photos), this may be easly implemented in the future though
+* The method of authorizing admins is only a suggestion. This is not fully implemented yet
+
+
+
 Summary
 ----
 Working on this project was pure pleasure. I tried to make the functions clear and easy to understand. I have also included descriptions for more complex functions. My only concern is the use of CSV files as a database. My goal was to make the database mobile and easy to use. Unfortunately, it turned out to be more difficult than I thought and it took longer to implement than I expected. As a result, some of the program's functions were cut. Nevertheless, I believe that the main assumptions of the task have been met.
+
+*Cheers*
+*Mroxny*
