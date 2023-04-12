@@ -65,12 +65,18 @@ public class Requirements {
         String[] vals = line.split(",");
         Requirements requirements = new Requirements();
 
-        requirements.setId(Integer.parseInt(vals[0]));
-        requirements.setSystem(vals[1]);
-        requirements.setProcessor(vals[2]);
-        requirements.setMemory(vals[3]);
-        requirements.setGraphics(vals[4]);
-        requirements.setStorage(vals[5]);
+        try{
+            requirements.setId(Integer.parseInt(vals[0]));
+            requirements.setSystem(vals[1]);
+            requirements.setProcessor(vals[2]);
+            requirements.setMemory(vals[3]);
+            requirements.setGraphics(vals[4]);
+            requirements.setStorage(vals[5]);
+        }
+        catch (IndexOutOfBoundsException ex) {
+            ex.printStackTrace();
+        }
+
 
         return requirements;
     }
