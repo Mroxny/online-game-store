@@ -100,7 +100,7 @@ public class StoreCSVService implements StoreDBInterface{
     public ResultDTO<String> updateGame(int id, GameDTO game) {
         List<String> lines = readCSV(FILE_GAMES);
         int index = getIndexByColumn(lines, 0, id+"");
-        if(index == -1) return new ResultDTO<>(HttpStatus.NOT_FOUND, "Not found game", "Cant find game with id"+id);
+        if(index == -1) return new ResultDTO<>(HttpStatus.NOT_FOUND, "Not found game", null);
 
         String gameLine = id+","+game;
         lines.remove(index);
