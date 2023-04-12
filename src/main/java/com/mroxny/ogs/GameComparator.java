@@ -10,6 +10,11 @@ public class GameComparator implements Comparator<Game> {
         this.orderValue = orderValue.toLowerCase();
     }
 
+    /**
+     * Compares two objects based on orderValue param given in class constructor
+     * @param o1 the first object to be compared.
+     * @param o2 the second object to be compared.
+     */
     @Override
     public int compare(Game o1, Game o2) {
         int res = 0;

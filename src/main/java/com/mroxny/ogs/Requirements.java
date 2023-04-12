@@ -56,6 +56,11 @@ public class Requirements {
         this.storage = storage;
     }
 
+    /**
+     * Makes new Requirements object based on the given line from CSV file
+     * @param line line from source CSV file
+     * @return new Studio object
+     */
     public static Requirements getFromCSV(String line){
         String[] vals = line.split(",");
         Requirements requirements = new Requirements();

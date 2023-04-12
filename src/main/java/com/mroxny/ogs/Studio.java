@@ -31,6 +31,11 @@ public class Studio {
         this.country = country;
     }
 
+    /**
+     * Makes new Studio object based on the given line from CSV file
+     * @param line line from source CSV file
+     * @return new Studio object
+     */
     public static Studio getFromCSV(String line){
         String[] vals = line.split(",");
         Studio studio = new Studio();
