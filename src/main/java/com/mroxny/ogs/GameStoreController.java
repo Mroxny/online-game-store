@@ -69,7 +69,7 @@ public class GameStoreController {
     }
 
     @PostMapping("/insertGame")
-    public ResponseEntity<Object> insertGame(@RequestParam GameDTO game){
+    public ResponseEntity<Object> insertGame(@RequestParam GameDTO game, @RequestParam(required = false) String apiKey){
         ResultDTO<String> result = dbManager.insertGame(game);
         if (result.getCode() != HttpStatus.OK) {
             return new ResponseEntity<>(result.getMessage(), result.getCode());
@@ -78,7 +78,7 @@ public class GameStoreController {
     }
 
     @PostMapping("/insertStudio")
-    public ResponseEntity<Object> insertStudio(@RequestParam StudioDTO studio){
+    public ResponseEntity<Object> insertStudio(@RequestParam StudioDTO studio, @RequestParam(required = false) String apiKey){
         ResultDTO<String> result = dbManager.insertStudio(studio);
         if (result.getCode() != HttpStatus.OK) {
             return new ResponseEntity<>(result.getMessage(), result.getCode());
@@ -87,7 +87,7 @@ public class GameStoreController {
     }
 
     @PostMapping("/insertRequirements")
-    public ResponseEntity<Object> insertStudio(@RequestParam RequirementsDTO requirements){
+    public ResponseEntity<Object> insertStudio(@RequestParam RequirementsDTO requirements, @RequestParam(required = false) String apiKey){
         ResultDTO<String> result = dbManager.insertRequirements(requirements);
         if (result.getCode() != HttpStatus.OK) {
             return new ResponseEntity<>(result.getMessage(), result.getCode());
@@ -96,7 +96,7 @@ public class GameStoreController {
     }
 
     @PutMapping("/updateGame/{id}")
-    public ResponseEntity<Object> updateGame(@PathVariable int id, @RequestParam GameDTO game){
+    public ResponseEntity<Object> updateGame(@PathVariable int id, @RequestParam GameDTO game, @RequestParam(required = false) String apiKey){
         ResultDTO<String> result = dbManager.updateGame(id,game);
         if (result.getCode() != HttpStatus.OK) {
             return new ResponseEntity<>(result.getMessage(), result.getCode());
@@ -106,7 +106,7 @@ public class GameStoreController {
     }
 
     @DeleteMapping("/deleteGame/{id}")
-    public ResponseEntity<Object> deleteGame(@PathVariable int id){
+    public ResponseEntity<Object> deleteGame(@PathVariable int id, @RequestParam(required = false) String apiKey){
         ResultDTO<String> result = dbManager.deleteGame(id);
         if (result.getCode() != HttpStatus.OK) {
             return new ResponseEntity<>(result.getMessage(), result.getCode());
