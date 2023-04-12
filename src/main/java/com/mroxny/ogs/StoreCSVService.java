@@ -35,7 +35,7 @@ public class StoreCSVService implements StoreDBInterface{
     public ResultDTO<Game> getGameById(int id) {
         String line = getLineByColumn(FILE_GAMES, 0, id+"");
 
-        if(line == null) return new ResultDTO<>(HttpStatus.BAD_REQUEST, "No game with that id", null);
+        if(line == null) return new ResultDTO<>(HttpStatus.BAD_REQUEST, "No game with id "+id, null);
 
         Game g = makeGameFromCSV(line);
         return new ResultDTO<>(HttpStatus.OK, "OK", g);
