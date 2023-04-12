@@ -21,6 +21,7 @@ public class GameStoreController {
 
     @GetMapping("/games")
     public ResponseEntity<Object> getAllGames(@RequestParam(required = false) String order, Pageable pageable){
+        //TODO: add paging system
         //can't find any classes responsible for pages, so I'll just leave it here
 
         if(order == null){
