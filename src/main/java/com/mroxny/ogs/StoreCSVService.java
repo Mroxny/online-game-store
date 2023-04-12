@@ -46,7 +46,7 @@ public class StoreCSVService implements StoreDBInterface{
     public ResultDTO<List<Game>> getGamesByName(String name, String order){
 
         List<String> lines = getLinesByColumn(FILE_GAMES, 1, name);
-        if(lines.size() < 1) return new ResultDTO<>(HttpStatus.NO_CONTENT, "There's no games with that name", null);
+        if(lines.size() < 1) return new ResultDTO<>(HttpStatus.NO_CONTENT, "There's no games with name"+ name, null);
 
         List<Game> g = makeGamesFromCSV(lines, order);
         return new ResultDTO<>(HttpStatus.OK, "OK", g);
