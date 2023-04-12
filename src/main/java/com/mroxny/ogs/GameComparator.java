@@ -4,10 +4,13 @@ import java.util.Comparator;
 
 public class GameComparator implements Comparator<Game> {
 
-    private String orderValue;
+    private String value;
+    private boolean desc;
 
     public GameComparator(String orderValue){
-        this.orderValue = orderValue.toLowerCase();
+        String[] s = orderValue.split(":");
+        this.value = s[0].toLowerCase();
+        if(s.length > 1) this.desc = s[1].equalsIgnoreCase("desc");
     }
 
     /**
@@ -18,11 +21,12 @@ public class GameComparator implements Comparator<Game> {
     @Override
     public int compare(Game o1, Game o2) {
         int res = 0;
-        switch (orderValue){
+        switch (value){
             case "date" -> res = o1.getPremiere().compareTo(o2.getPremiere());
             case "name" -> res = o1.getName().compareTo(o2.getName());
             case "price" -> res = Float.compare(o1.getPrice(), o2.getPrice());
         }
+        if(desc) res *= -1;
         return res;
     }
 }
