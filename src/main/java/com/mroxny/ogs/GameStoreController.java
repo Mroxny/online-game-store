@@ -1,12 +1,12 @@
 package com.mroxny.ogs;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.support.PagedListHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.awt.print.Pageable;
+import java.util.List;
 
 @RestController
 @RequestMapping("/store")
@@ -27,21 +27,21 @@ public class GameStoreController {
         if(order == null){
             order = "name";
         }
-        ResponseDTO response = dbManager.getAllGames(order);
-        if (response.getCode() != HttpStatus.OK) {
-            return new ResponseEntity<>(response.getMessage(), response.getCode());
+        ResultDTO<List<Game>> result = dbManager.getAllGames(order);
+        if (result.getCode() != HttpStatus.OK) {
+            return new ResponseEntity<>(result.getMessage(), result.getCode());
         }
 
-        return ResponseEntity.ok(response.getContent());
+        return ResponseEntity.ok(result.getContent());
     }
 
     @GetMapping("/game/{id}")
     public ResponseEntity<Object> getGameById(@PathVariable int id){
-        ResponseDTO response = dbManager.getGameById(id);
-        if (response.getCode() != HttpStatus.OK) {
-            return new ResponseEntity<>(response.getMessage(), response.getCode());
+        ResultDTO<Game> result = dbManager.getGameById(id);
+        if (result.getCode() != HttpStatus.OK) {
+            return new ResponseEntity<>(result.getMessage(), result.getCode());
         }
-        return ResponseEntity.ok(response.getContent().get(0));
+        return ResponseEntity.ok(result.getContent());
     }
 
     @GetMapping("/games/{genre}")
@@ -49,11 +49,11 @@ public class GameStoreController {
         if(order == null){
             order = "name";
         }
-        ResponseDTO response = dbManager.getGamesByGenre(genre, order);
-        if (response.getCode() != HttpStatus.OK) {
-            return new ResponseEntity<>(response.getMessage(), response.getCode());
+        ResultDTO<List<Game>> result = dbManager.getGamesByGenre(genre, order);
+        if (result.getCode() != HttpStatus.OK) {
+            return new ResponseEntity<>(result.getMessage(), result.getCode());
         }
-        return ResponseEntity.ok(response.getContent());
+        return ResponseEntity.ok(result.getContent());
     }
 
     @GetMapping("/findGame")
@@ -61,55 +61,57 @@ public class GameStoreController {
         if(order == null){
             order = "name";
         }
-        ResponseDTO response = dbManager.getGamesByName(query, order);
-        if (response.getCode() != HttpStatus.OK) {
-            return new ResponseEntity<>(response.getMessage(), response.getCode());
+        ResultDTO<List<Game>> result = dbManager.getGamesByName(query, order);
+        if (result.getCode() != HttpStatus.OK) {
+            return new ResponseEntity<>(result.getMessage(), result.getCode());
         }
-        return ResponseEntity.ok(response.getContent());
+        return ResponseEntity.ok(result.getContent());
     }
 
     @PostMapping("/insertGame")
     public ResponseEntity<Object> insertGame(@RequestParam GameDTO game){
-        ResponseDTO response = dbManager.insertGame(game);
-        if (response.getCode() != HttpStatus.OK) {
-            return new ResponseEntity<>(response.getMessage(), response.getCode());
+        ResultDTO<String> result = dbManager.insertGame(game);
+        if (result.getCode() != HttpStatus.OK) {
+            return new ResponseEntity<>(result.getMessage(), result.getCode());
         }
-        return ResponseEntity.ok(response.getMessage());
+        return ResponseEntity.ok(result.getContent());
     }
 
     @PostMapping("/insertStudio")
     public ResponseEntity<Object> insertStudio(@RequestParam StudioDTO studio){
-        ResponseDTO response = dbManager.insertStudio(studio);
-        if (response.getCode() != HttpStatus.OK) {
-            return new ResponseEntity<>(response.getMessage(), response.getCode());
+        ResultDTO<String> result = dbManager.insertStudio(studio);
+        if (result.getCode() != HttpStatus.OK) {
+            return new ResponseEntity<>(result.getMessage(), result.getCode());
         }
-        return ResponseEntity.ok(response.getMessage());
+        return ResponseEntity.ok(result.getContent());
     }
 
     @PostMapping("/insertRequirements")
     public ResponseEntity<Object> insertStudio(@RequestParam RequirementsDTO requirements){
-        ResponseDTO response = dbManager.insertRequirements(requirements);
-        if (response.getCode() != HttpStatus.OK) {
-            return new ResponseEntity<>(response.getMessage(), response.getCode());
+        ResultDTO<String> result = dbManager.insertRequirements(requirements);
+        if (result.getCode() != HttpStatus.OK) {
+            return new ResponseEntity<>(result.getMessage(), result.getCode());
         }
-        return ResponseEntity.ok(response.getMessage());
+        return ResponseEntity.ok(result.getContent());
     }
 
     @PutMapping("/updateGame/{id}")
     public ResponseEntity<Object> updateGame(@PathVariable int id, @RequestParam GameDTO game){
-        ResponseDTO response = dbManager.updateGame(id,game);
-        if (response.getCode() != HttpStatus.OK) {
-            return new ResponseEntity<>(response.getMessage(), response.getCode());
+        ResultDTO<String> result = dbManager.updateGame(id,game);
+        if (result.getCode() != HttpStatus.OK) {
+            return new ResponseEntity<>(result.getMessage(), result.getCode());
         }
-        return ResponseEntity.ok(response.getMessage());
+        return ResponseEntity.ok(result.getContent());
+
     }
 
     @DeleteMapping("/deleteGame/{id}")
     public ResponseEntity<Object> deleteGame(@PathVariable int id){
-        ResponseDTO response = dbManager.deleteGame(id);
-        if (response.getCode() != HttpStatus.OK) {
-            return new ResponseEntity<>(response.getMessage(), response.getCode());
+        ResultDTO<String> result = dbManager.deleteGame(id);
+        if (result.getCode() != HttpStatus.OK) {
+            return new ResponseEntity<>(result.getMessage(), result.getCode());
         }
-        return ResponseEntity.ok(response.getMessage());
+        return ResponseEntity.ok(result.getContent());
+
     }
 }

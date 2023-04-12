@@ -3,22 +3,22 @@ package com.mroxny.ogs;
 import java.util.List;
 
 public interface StoreDBInterface {
-    public ResponseDTO getAllGames(String order);
+    public ResultDTO<List<Game>> getAllGames(String order);
 
-    public ResponseDTO getGameById(int id);
+    public ResultDTO<Game> getGameById(int id);
 
-    public ResponseDTO getGamesByName(String name, String order);
+    public ResultDTO<List<Game>> getGamesByName(String name, String order);
 
-    public ResponseDTO getGamesByGenre(String genre,String order);
+    public ResultDTO<List<Game>> getGamesByGenre(String genre, String order);
 
-    public ResponseDTO insertGame(GameDTO game);
+    public ResultDTO<String> insertGame(GameDTO game);
 
-    public ResponseDTO insertStudio(StudioDTO studio);
+    public ResultDTO<String> insertStudio(StudioDTO studio);
 
-    public ResponseDTO insertRequirements(RequirementsDTO requirements);
+    public ResultDTO<String> insertRequirements(RequirementsDTO requirements);
 
-    public ResponseDTO updateGame(int id, GameDTO game);
+    public ResultDTO<String> updateGame(int id, GameDTO game);
 
-    public ResponseDTO deleteGame(int id);
+    public ResultDTO<String> deleteGame(int id);
 
 }

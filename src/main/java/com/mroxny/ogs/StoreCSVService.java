@@ -1,7 +1,6 @@
 package com.mroxny.ogs;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -24,84 +23,84 @@ public class StoreCSVService implements StoreDBInterface{
 
 
     @Override
-    public ResponseDTO getAllGames(String order) {
+    public ResultDTO<List<Game>> getAllGames(String order) {
         List<String> lines = readCSV(FILE_GAMES);
         List<Game> games = makeGamesFromCSV(lines, order);
 
 
-        return new ResponseDTO(HttpStatus.OK,"OK", games);
+        return new ResultDTO<>(HttpStatus.OK,"OK", games);
     }
 
     @Override
-    public ResponseDTO getGameById(int id) {
+    public ResultDTO<Game> getGameById(int id) {
         String line = getLineByColumn(FILE_GAMES, 0, id+"");
 
-        if(line == null) return new ResponseDTO(HttpStatus.BAD_REQUEST, "No game with that id", null);
+        if(line == null) return new ResultDTO<>(HttpStatus.BAD_REQUEST, "No game with that id", null);
 
         Game g = makeGameFromCSV(line);
-        return new ResponseDTO(HttpStatus.OK, "OK", Collections.singletonList(g));
+        return new ResultDTO<>(HttpStatus.OK, "OK", g);
     }
 
     //TODO: Make better search engine
     @Override
-    public ResponseDTO getGamesByName(String name, String order){
+    public ResultDTO<List<Game>> getGamesByName(String name, String order){
 
         List<String> lines = getLinesByColumn(FILE_GAMES, 1, name);
-        if(lines.size() < 1) return new ResponseDTO(HttpStatus.NO_CONTENT, "There's no games with that name", null);
+        if(lines.size() < 1) return new ResultDTO<>(HttpStatus.NO_CONTENT, "There's no games with that name", null);
 
         List<Game> g = makeGamesFromCSV(lines, order);
-        return new ResponseDTO(HttpStatus.OK, "OK", g);
+        return new ResultDTO<>(HttpStatus.OK, "OK", g);
     }
 
     @Override
-    public ResponseDTO getGamesByGenre(String genre,String order) {
+    public ResultDTO<List<Game>> getGamesByGenre(String genre, String order) {
         String target = getLineByColumn(FILE_GENRES, 1, genre);
-        if(target == null) return new ResponseDTO(HttpStatus.NOT_FOUND, "Cant find genre "+genre, null);
+        if(target == null) return new ResultDTO<>(HttpStatus.NOT_FOUND, "Cant find genre "+genre, null);
 
         int genreId = Integer.parseInt(target.split(",")[0]);
         List<String> gameStrings = getManyToMany(FILE_GAMES_GENRES, FILE_GAMES, genreId, 1,0);
-        if(gameStrings.size() < 1) return new ResponseDTO(HttpStatus.NO_CONTENT, "No games with genre "+genre, null);
+        if(gameStrings.size() < 1) return new ResultDTO<>(HttpStatus.NO_CONTENT, "No games with genre "+genre, null);
 
         List<Game> g = makeGamesFromCSV(gameStrings, order);
-        return new ResponseDTO(HttpStatus.OK, "OK", g);
+        return new ResultDTO<>(HttpStatus.OK, "OK", g);
     }
 
     @Override
-    public ResponseDTO insertGame(GameDTO game) {
+    public ResultDTO<String> insertGame(GameDTO game) {
         List<String> games = readCSV(FILE_GAMES);
         int newGameId = getNewId(games);
         String gameLine = newGameId+","+game;
         writeInCSV(FILE_GAMES, gameLine, true);
 
-        return new ResponseDTO(HttpStatus.OK, "Id: "+newGameId, null);
+        return new ResultDTO<>(HttpStatus.OK, "OK","Id: "+newGameId);
     }
 
     @Override
-    public ResponseDTO insertStudio(StudioDTO studio) {
+    public ResultDTO<String> insertStudio(StudioDTO studio) {
         List<String> studios = readCSV(FILE_STUDIOS);
         int newStudioId = getNewId(studios);
         String studioLine = newStudioId+","+studio;
         writeInCSV(FILE_STUDIOS, studioLine, true);
 
-        return new ResponseDTO(HttpStatus.OK, "Id: "+newStudioId, null);
+        return new ResultDTO<>(HttpStatus.OK, "OK","Id: "+newStudioId);
     }
 
     @Override
-    public ResponseDTO insertRequirements(RequirementsDTO requirements) {
-        List<String> reqs = readCSV(FILE_STUDIOS);
+    public ResultDTO<String> insertRequirements(RequirementsDTO requirements) {
+        List<String> reqs = readCSV(FILE_REQUIREMENTS);
         int newReqsId = getNewId(reqs);
         String reqsLine = newReqsId+","+requirements;
-        writeInCSV(FILE_STUDIOS, reqsLine, true);
+        writeInCSV(FILE_REQUIREMENTS, reqsLine, true);
 
-        return new ResponseDTO(HttpStatus.OK, "Id: "+newReqsId, null);
+        return new ResultDTO<>(HttpStatus.OK, "OK","Id: "+newReqsId);
     }
 
 
     @Override
-    public ResponseDTO updateGame(int id, GameDTO game) {
+    public ResultDTO<String> updateGame(int id, GameDTO game) {
         List<String> lines = readCSV(FILE_GAMES);
         int index = getIndexByColumn(lines, 0, id+"");
-        if(index == -1) return new ResponseDTO(HttpStatus.NOT_FOUND, "Cant find game with id"+id, null);
+        if(index == -1) return new ResultDTO<>(HttpStatus.NOT_FOUND, "Not found game", "Cant find game with id"+id);
 
         String gameLine = id+","+game;
         lines.remove(index);
@@ -112,15 +111,15 @@ public class StoreCSVService implements StoreDBInterface{
             writeInCSV(FILE_GAMES, lines.get(i), true);
         }
 
-        return new ResponseDTO(HttpStatus.OK, "OK", null);
+        return new ResultDTO<>(HttpStatus.OK, "OK", "Updated game with id "+id);
 
     }
 
     @Override
-    public ResponseDTO deleteGame(int id) {
+    public ResultDTO<String> deleteGame(int id) {
         List<String> lines = readCSV(FILE_GAMES);
         int index = getIndexByColumn(lines, 0, id+"");
-        if(index == -1) return new ResponseDTO(HttpStatus.NOT_FOUND, "Cant find game with id"+id, null);
+        if(index == -1) return new ResultDTO<>(HttpStatus.NOT_FOUND, "Cant find game with id"+id, null);
 
         lines.remove(index);
         writeInCSV(FILE_GAMES, lines.get(0), false);
@@ -129,7 +128,7 @@ public class StoreCSVService implements StoreDBInterface{
             writeInCSV(FILE_GAMES, lines.get(i), true);
         }
 
-        return new ResponseDTO(HttpStatus.OK, "OK", null);
+        return new ResultDTO<>(HttpStatus.OK, "OK", "Deleted game with id "+id);
     }
 
 
@@ -179,22 +178,28 @@ public class StoreCSVService implements StoreDBInterface{
         String[] values = line.split(",");
         Game game = new Game();
 
-        game.setId(Integer.parseInt(values[0]));
-        game.setName(values[1]);
-        game.setCover(values[2]);
-        game.setSmallDesc(values[3]);
-        game.setBigDesc(values[4]);
-        game.setPremiere(values[5]);
-        game.setPrice(Float.parseFloat(values[6]));
+        try{
+            game.setId(Integer.parseInt(values[0]));
+            game.setName(values[1]);
+            game.setCover(values[2]);
+            game.setSmallDesc(values[3]);
+            game.setBigDesc(values[4]);
+            game.setPremiere(values[5]);
+            game.setPrice(Float.parseFloat(values[6]));
 
-        game.setTrailers(getValuesFromLines(getOneToMany(FILE_TRAILERS, game.getId()), 1));
-        game.setPhotos(getValuesFromLines(getOneToMany(FILE_IMAGES, game.getId()), 1));
+            game.setTrailers(getValuesFromLines(getOneToMany(FILE_TRAILERS, game.getId()), 1));
+            game.setPhotos(getValuesFromLines(getOneToMany(FILE_IMAGES, game.getId()), 1));
 
-        game.setStudio(Studio.getFromCSV(getLinesByColumn(FILE_STUDIOS, 0, values[7]).get(0)));
-        game.setRequirements(Requirements.getFromCSV(getLinesByColumn(FILE_REQUIREMENTS, 0, values[8]).get(0)));
+            game.setStudio(Studio.getFromCSV(getLinesByColumn(FILE_STUDIOS, 0, values[7]).get(0)));
+            game.setRequirements(Requirements.getFromCSV(getLinesByColumn(FILE_REQUIREMENTS, 0, values[8]).get(0)));
 
-        game.setGenres(getValuesFromLines(getManyToMany(FILE_GAMES_GENRES,FILE_GENRES, game.getId(),0,1),1));
-        game.setTags(getValuesFromLines(getManyToMany(FILE_GAMES_TAGS,FILE_TAGS, game.getId(),0,1),1));
+            game.setGenres(getValuesFromLines(getManyToMany(FILE_GAMES_GENRES,FILE_GENRES, game.getId(),0,1),1));
+            game.setTags(getValuesFromLines(getManyToMany(FILE_GAMES_TAGS,FILE_TAGS, game.getId(),0,1),1));
+
+        }
+        catch (Exception ex){
+            ex.printStackTrace();
+        }
 
 
         return game;

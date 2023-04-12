@@ -4,13 +4,13 @@ import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
-public class ResponseDTO {
+public class ResultDTO<T> {
     private HttpStatus code;
     private String message;
-    private List<Game> content;
+    private T content;
 
 
-    public ResponseDTO(HttpStatus code, String message, List<Game> content) {
+    public ResultDTO(HttpStatus code, String message, T content) {
         this.code = code;
         this.message = message;
         this.content = content;
@@ -32,11 +32,11 @@ public class ResponseDTO {
         this.message = message;
     }
 
-    public List<Game> getContent() {
+    public T getContent() {
         return content;
     }
 
-    public void setContent(List<Game> content) {
+    public void setContent(T content) {
         this.content = content;
     }
 }

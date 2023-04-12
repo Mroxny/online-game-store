@@ -16,34 +16,40 @@ class OgsApplicationTests {
     @Test
     public void testGetAllGames() {
         StoreCSVService service = new StoreCSVService();
-        ResponseDTO responseDTO = service.getAllGames("name");
-        assertEquals(HttpStatus.OK, responseDTO.getCode());
-        assertEquals(10, responseDTO.getContent().size());
+        ResultDTO<List<Game>> resultDTO = service.getAllGames("name");
+        assertEquals(HttpStatus.OK, resultDTO.getCode());
+        assertEquals(10, resultDTO.getContent().size());
     }
 
     @Test
     public void testGetGameById() {
         StoreCSVService service = new StoreCSVService();
-        ResponseDTO responseDTO = service.getGameById(1);
-        assertEquals(HttpStatus.OK, responseDTO.getCode());
-        assertEquals("Cyberpunk2077", responseDTO.getContent().get(0).getName());
+        ResultDTO<Game> resultDTO = service.getGameById(1);
+
+        List<String> lines = service.readCSV("./csvDB/games.csv");
+        String testName = lines.get(0).split(",")[1];
+
+        assertEquals(HttpStatus.OK, resultDTO.getCode());
+        assertEquals(testName, resultDTO.getContent().getName());
     }
 
     @Test
     public void testGetGamesByName() {
         StoreCSVService service = new StoreCSVService();
-        ResponseDTO responseDTO = service.getGamesByName("Cyberpunk2077", "name");
-        assertEquals(HttpStatus.OK, responseDTO.getCode());
-        assertEquals(1, responseDTO.getContent().size());
-        assertEquals("Cyberpunk2077", responseDTO.getContent().get(0).getName());
+        ResultDTO<List<Game>> resultDTO = service.getGamesByName("Cyberpunk2077", "name");
+
+        assertEquals(HttpStatus.OK, resultDTO.getCode());
+        assertEquals(1, resultDTO.getContent().size());
+        assertEquals("Cyberpunk2077", resultDTO.getContent().get(0).getName());
     }
 
     @Test
     public void testGetGamesByGenre() {
         StoreCSVService service = new StoreCSVService();
-        ResponseDTO responseDTO = service.getGamesByGenre("RPG", "name");
-        assertEquals(HttpStatus.OK, responseDTO.getCode());
-        assertEquals(4, responseDTO.getContent().size());
+        ResultDTO<List<Game>> resultDTO = service.getGamesByGenre("RPG", "name");
+
+        assertEquals(HttpStatus.OK, resultDTO.getCode());
+        assertEquals(4, resultDTO.getContent().size());
     }
 
     @Test
@@ -61,8 +67,8 @@ class OgsApplicationTests {
         gameDTO.setRequirements(2);
 
 
-        ResponseDTO responseDTO = service.insertGame(gameDTO);
-        assertEquals(HttpStatus.OK, responseDTO.getCode());
+        ResultDTO<String> resultDTO = service.insertGame(gameDTO);
+        assertEquals(HttpStatus.OK, resultDTO.getCode());
 
         List<String> lines = service.readCSV("./csvDB/games.csv");
         assertTrue(lines.stream().anyMatch(l -> l.contains("NewGame")));
@@ -82,10 +88,10 @@ class OgsApplicationTests {
         gameDTO.setStudio(1);
         gameDTO.setRequirements(3);
 
-        ResponseDTO responseDTO = service.updateGame(1,gameDTO);
-        assertEquals(HttpStatus.OK, responseDTO.getCode());
+        ResultDTO<String> resultDTO = service.updateGame(1,gameDTO);
+        assertEquals(HttpStatus.OK, resultDTO.getCode());
 
-        String gameName = service.getGameById(1).getContent().get(0).getName();
+        String gameName = service.getGameById(1).getContent().getName();
 
         assertEquals("GameNew", gameName);
     }
@@ -95,10 +101,10 @@ class OgsApplicationTests {
         StoreCSVService service = new StoreCSVService();
 
         int indexToDelete = 1;
-        String gameName = service.getGameById(indexToDelete).getContent().get(0).getName();
+        String gameName = service.getGameById(indexToDelete).getContent().getName();
 
-        ResponseDTO responseDTO = service.deleteGame(indexToDelete);
-        assertEquals(HttpStatus.OK, responseDTO.getCode());
+        ResultDTO<String> resultDTO = service.deleteGame(indexToDelete);
+        assertEquals(HttpStatus.OK, resultDTO.getCode());
 
         List<String> lines = service.readCSV("./csvDB/games.csv");
         assertTrue(lines.stream().anyMatch(l -> !l.contains(gameName)));
