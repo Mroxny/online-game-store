@@ -9,8 +9,6 @@ public class GameDTO {
     private String bigDesc;
     private String premiere;
     private float price;
-    private List<String> trailers;
-    private List<String> photos;
     private int studio;
     private int requirements;
 
@@ -60,22 +58,6 @@ public class GameDTO {
 
     public void setPrice(float price) {
         this.price = price;
-    }
-
-    public List<String> getTrailers() {
-        return trailers;
-    }
-
-    public void setTrailers(List<String> trailers) {
-        this.trailers = trailers;
-    }
-
-    public List<String> getPhotos() {
-        return photos;
-    }
-
-    public void setPhotos(List<String> photos) {
-        this.photos = photos;
     }
 
     public int getStudio() {

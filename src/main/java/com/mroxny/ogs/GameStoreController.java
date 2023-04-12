@@ -1,13 +1,12 @@
 package com.mroxny.ogs;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.support.PagedListHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.awt.print.Pageable;
 
 @RestController
 @RequestMapping("/store")
@@ -21,7 +20,9 @@ public class GameStoreController {
     }
 
     @GetMapping("/games")
-    public ResponseEntity<Object> getAllGames(@RequestParam(required = false) String order){
+    public ResponseEntity<Object> getAllGames(@RequestParam(required = false) String order, Pageable pageable){
+        //can't find any classes responsible for pages, so I'll just leave it here
+
         if(order == null){
             order = "name";
         }
@@ -29,6 +30,7 @@ public class GameStoreController {
         if (response.getCode() != HttpStatus.OK) {
             return new ResponseEntity<>(response.getMessage(), response.getCode());
         }
+
         return ResponseEntity.ok(response.getContent());
     }
 
