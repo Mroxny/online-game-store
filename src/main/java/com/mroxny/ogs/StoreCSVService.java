@@ -8,6 +8,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class StoreCSVService implements StoreDBInterface{
@@ -136,9 +137,20 @@ public class StoreCSVService implements StoreDBInterface{
         }
         return res;
     }
-    private int getIndexByColumn(String path, int column,String value){
+    private String getLineByColumn(String path, int column,String value){
         List<String> lines = readCSV(path);
-
+        return getLineByColumn(lines,column,value);
+    }
+    private String getLineByColumn(List<String> lines, int column,String value){
+        for(String s : lines){
+            String[] vals = s.split(",");
+            if(vals[column].equalsIgnoreCase(value)){
+                return s;
+            }
+        }
+        return null;
+    }
+    private int getIndexByColumn(List<String> lines, int column,String value){
         for(int i = 0; i<lines.size(); i++){
             String[] vals = lines.get(i).split(",");
             if(vals[column].equalsIgnoreCase(value)){
@@ -157,19 +169,14 @@ public class StoreCSVService implements StoreDBInterface{
         return res;
     }
 
-    private int getNewId(){
-        //I'm so sorry about this :,)
-        /*int min = 0;
-        for(String s : lines){
-            String[] vals = s.split(",");
-            int id = Integer.parseInt(vals[0]);
-            if(id > min) min = id;
-        }
-        return ++min;*/
-        return 0;
+    private int getNewId(List<String> lines){
+        int max = lines
+                .stream()
+                .mapToInt(v -> Integer.parseInt(v.split(",")[0]))
+                .max().orElseThrow(NoSuchElementException::new);
+
+        return ++max;
     }
-
-
 
 
     @Override
@@ -183,11 +190,11 @@ public class StoreCSVService implements StoreDBInterface{
 
     @Override
     public ResponseDTO getGameById(int id) {
-        List<String> lines = getLinesByColumn(FILE_GAMES, 0, id+"");
+        String line = getLineByColumn(FILE_GAMES, 0, id+"");
 
-        if(lines.size() < 1) return new ResponseDTO(HttpStatus.BAD_REQUEST, "No game with that id", null);
+        if(line == null) return new ResponseDTO(HttpStatus.BAD_REQUEST, "No game with that id", null);
 
-        Game g = makeGameFromCSV(lines.get(0));
+        Game g = makeGameFromCSV(line);
         return new ResponseDTO(HttpStatus.OK, "OK", Collections.singletonList(g));
     }
 
@@ -204,10 +211,10 @@ public class StoreCSVService implements StoreDBInterface{
 
     @Override
     public ResponseDTO getGamesByGenre(String genre,String order) {
-        List<String> targets = getLinesByColumn(FILE_GENRES, 1, genre);
-        if(targets.size() < 1) return new ResponseDTO(HttpStatus.NOT_FOUND, "Cant find genre "+genre, null);
+        String target = getLineByColumn(FILE_GENRES, 1, genre);
+        if(target == null) return new ResponseDTO(HttpStatus.NOT_FOUND, "Cant find genre "+genre, null);
 
-        int genreId = Integer.parseInt(targets.get(0).split(",")[0]);
+        int genreId = Integer.parseInt(target.split(",")[0]);
         List<String> gameStrings = getManyToMany(FILE_GAMES_GENRES, FILE_GAMES, genreId, 1,0);
         if(gameStrings.size() < 1) return new ResponseDTO(HttpStatus.NO_CONTENT, "No games with genre "+genre, null);
 
@@ -217,17 +224,41 @@ public class StoreCSVService implements StoreDBInterface{
 
     @Override
     public ResponseDTO insertGame(GameDTO game) {
-        return null;
+        List<String> games = readCSV(FILE_GAMES);
+        int newGameId = getNewId(games);
+        String gameLine = newGameId+","+game;
+        writeInCSV(FILE_GAMES, gameLine, true);
+
+        return new ResponseDTO(HttpStatus.OK, "OK", null);
     }
 
     @Override
     public ResponseDTO updateGame(int id, GameDTO game) {
-        return null;
+        List<String> lines = readCSV(FILE_GAMES);
+        int index = getIndexByColumn(lines, 0, id+"");
+        String gameLine = id+","+game;
+        lines.add(index, gameLine);
+
+        for(String s: lines){
+            writeInCSV(FILE_GAMES, s, false);
+
+        }
+
+        return new ResponseDTO(HttpStatus.OK, "OK", null);
+
     }
 
     @Override
     public ResponseDTO deleteGame(int id) {
-        return null;
+        List<String> lines = readCSV(FILE_GAMES);
+        int index = getIndexByColumn(lines, 0, id+"");
+        lines.remove(index);
+
+        for(String s: lines){
+            writeInCSV(FILE_GAMES, s, false);
+        }
+
+        return new ResponseDTO(HttpStatus.OK, "OK", null);
     }
 
 }

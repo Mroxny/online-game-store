@@ -11,10 +11,8 @@ public class GameDTO {
     private float price;
     private List<String> trailers;
     private List<String> photos;
-    private List<String> genres;
-    private List<String> tags;
-    private Studio studio;
-    private Requirements requirements;
+    private int studio;
+    private int requirements;
 
     public String getName() {
         return name;
@@ -80,35 +78,24 @@ public class GameDTO {
         this.photos = photos;
     }
 
-    public List<String> getGenres() {
-        return genres;
-    }
-
-    public void setGenres(List<String> genres) {
-        this.genres = genres;
-    }
-
-    public List<String> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<String> tags) {
-        this.tags = tags;
-    }
-
-    public Studio getStudio() {
+    public int getStudio() {
         return studio;
     }
 
-    public void setStudio(Studio studio) {
+    public void setStudio(int studio) {
         this.studio = studio;
     }
 
-    public Requirements getRequirements() {
+    public int getRequirements() {
         return requirements;
     }
 
-    public void setRequirements(Requirements requirements) {
+    public void setRequirements(int requirements) {
         this.requirements = requirements;
+    }
+
+    @Override
+    public String toString() {
+        return name+","+cover+","+smallDesc+","+bigDesc+","+premiere+","+price+","+studio+","+requirements;
     }
 }
