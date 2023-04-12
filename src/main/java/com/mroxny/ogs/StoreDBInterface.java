@@ -13,6 +13,8 @@ public interface StoreDBInterface {
 
     public ResponseDTO insertGame(GameDTO game);
 
+    public ResponseDTO insertStudio(StudioDTO studio);
+
     public ResponseDTO updateGame(int id, GameDTO game);
 
     public ResponseDTO deleteGame(int id);
