@@ -37,7 +37,7 @@ Assumptions
 
 Summary
 ----
-Working on this project was pure pleasure. I tried to make the functions clear and easy to understand. I have also included descriptions for more complex functions. My only concern is the use of CSV files as a database. My goal was to make the database mobile and easy to use. Unfortunately, it turned out to be more difficult than I thought and it took longer to implement than I expected. As a result, some of the program's functions were cut. Nevertheless, I believe that the main assumptions of the task have been met.
+Working on this project was pure pleasure. I tried to make the functions clear and easy to understand. I have also included descriptions for more complex functions. My only concern is the use of CSV files as a database. My goal was to make the database mobile and easy to use. Unfortunately, it turned out to be more difficult than I thought and it took longer to implement than I expected. As a result, some of the program's functions were cut.
 
 *Cheers*</br>
 *Mroxny*
