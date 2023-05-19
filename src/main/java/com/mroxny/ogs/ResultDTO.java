@@ -1,9 +1,12 @@
 package com.mroxny.ogs;
 
+import lombok.Data;
+import lombok.experimental.StandardException;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
+@Data
 public class ResultDTO<T> {
     private HttpStatus code;
     private String message;
@@ -16,27 +19,5 @@ public class ResultDTO<T> {
         this.content = content;
     }
 
-    public HttpStatus getCode() {
-        return code;
-    }
 
-    public void setCode(HttpStatus code) {
-        this.code = code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public T getContent() {
-        return content;
-    }
-
-    public void setContent(T content) {
-        this.content = content;
-    }
 }
